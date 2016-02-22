@@ -7,9 +7,12 @@ package woordenapplicatie.gui;
  */
 import java.net.URL;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -90,7 +93,46 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void frequentieAction(ActionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String[] words = (taInput.getText().replace("\n", " ")).split(" ");
+        Map<String, Integer> freqWords = new TreeMap();
+
+        for (String word : words) {
+            String w = word.toLowerCase().replace(",", "");
+            if (freqWords.containsKey(w)) {
+                Integer i = freqWords.get(w);
+                i++;
+                freqWords.put(w, i);
+            } else {
+                freqWords.put(w, 1);
+            }
+        }
+        taOutput.setText("Frequentie woorden:");
+        freqWords = sortByValue(freqWords);
+        for (String key : freqWords.keySet()) {
+            taOutput.appendText("\n" + key + "\t" + freqWords.get(key));
+        }
+
+    }
+
+    public Map sortByValue(Map unsortedMap) {
+        Map sortedMap = new TreeMap(new ValueComparator(unsortedMap));
+        sortedMap.putAll(unsortedMap);
+        return sortedMap;
+    }
+
+    class ValueComparator implements Comparator {
+
+        Map map;
+
+        public ValueComparator(Map map) {
+            this.map = map;
+        }
+
+        public int compare(Object keyA, Object keyB) {
+            Comparable valueA = (Comparable) map.get(keyA);
+            Comparable valueB = (Comparable) map.get(keyB);
+            return valueA.compareTo(valueB);
+        }
     }
 
     @FXML
