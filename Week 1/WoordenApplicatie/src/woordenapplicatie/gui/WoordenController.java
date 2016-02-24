@@ -5,15 +5,10 @@ package woordenapplicatie.gui;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -94,7 +89,7 @@ public class WoordenController implements Initializable {
     @FXML
     private void frequentieAction(ActionEvent event) {
         String[] words = (taInput.getText().replace("\n", " ")).split(" ");
-        Map<String, Integer> freqWords = new TreeMap();
+        Map<String, Integer> freqWords = new HashMap<String, Integer>();
 
         for (String word : words) {
             String w = word.toLowerCase().replace(",", "");
@@ -107,32 +102,32 @@ public class WoordenController implements Initializable {
             }
         }
         taOutput.setText("Frequentie woorden:");
-        freqWords = sortByValue(freqWords);
-        for (String key : freqWords.keySet()) {
-            taOutput.appendText("\n" + key + "\t" + freqWords.get(key));
+        List<Map.Entry<String, Integer>> list =
+                new LinkedList<Map.Entry<String, Integer>>(freqWords.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> o1,
+                               Map.Entry<String, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+        for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
+            Map.Entry<String, Integer> entry = it.next();
+            sortedMap.put(entry.getKey(), entry.getValue());
         }
+        taOutput.setText(sortedMap.toString());
 
-    }
-
-    public Map sortByValue(Map unsortedMap) {
-        Map sortedMap = new TreeMap(new ValueComparator(unsortedMap));
-        sortedMap.putAll(unsortedMap);
-        return sortedMap;
-    }
-
-    class ValueComparator implements Comparator {
-
-        Map map;
-
-        public ValueComparator(Map map) {
-            this.map = map;
-        }
-
-        public int compare(Object keyA, Object keyB) {
-            Comparable valueA = (Comparable) map.get(keyA);
-            Comparable valueB = (Comparable) map.get(keyB);
-            return valueA.compareTo(valueB);
-        }
+        /**TreeSet<Map.Entry<String, Integer>> freqWordsSet = new TreeSet<>(new Comparator<Map.Entry<String,Integer>>(){
+            @Override
+            public int compare(Map.Entry<String,Integer> o1, Map.Entry<String,Integer> o2) {
+                return ((Comparable) ((Map.Entry) (o1)).getValue())
+                        .compareTo(((Map.Entry) (o2)).getValue());            }
+        });
+        freqWordsSet.addAll(freqWords.entrySet());
+        System.out.println(freqWordsSet);
+*/
     }
 
     @FXML
