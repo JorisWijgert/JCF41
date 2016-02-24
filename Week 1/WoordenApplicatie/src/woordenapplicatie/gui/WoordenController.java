@@ -132,7 +132,27 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void concordatieAction(ActionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String[] words = (taInput.getText().replace("\n", " ")).split(" ");
+        Set<String> sortedWords = new TreeSet();
+        Map<String, Integer> freqWords = new TreeMap();
+        for (String word : words) {
+            sortedWords.add(word.toLowerCase().replace(",", ""));
+        }
+        
+        for (String word : sortedWords){
+            
+        }
+        
+        for (String word : words) {
+            String w = word.toLowerCase().replace(",", "");
+            if (freqWords.containsKey(w)) {
+                Integer i = freqWords.get(w);
+                i++;
+                freqWords.put(w, i);
+            } else {
+                freqWords.put(w, 1);
+            }
+        }
     }
 
 }
