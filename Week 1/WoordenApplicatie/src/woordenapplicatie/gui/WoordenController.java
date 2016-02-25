@@ -117,7 +117,11 @@ public class WoordenController implements Initializable {
             Map.Entry<String, Integer> entry = it.next();
             sortedMap.put(entry.getKey(), entry.getValue());
         }
-        taOutput.setText(sortedMap.toString());
+        taOutput.setText("Aantal keer:");
+        for (String w : sortedMap.keySet()) {
+            taOutput.appendText("\n" + w + ":" + sortedMap.get(w));
+        }
+       
 
         /**TreeSet<Map.Entry<String, Integer>> freqWordsSet = new TreeSet<>(new Comparator<Map.Entry<String,Integer>>(){
             @Override
@@ -132,26 +136,29 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void concordatieAction(ActionEvent event) {
-        String[] words = (taInput.getText().replace("\n", " ")).split(" ");
-        Set<String> sortedWords = new TreeSet();
-        Map<String, Integer> freqWords = new TreeMap();
-        for (String word : words) {
-            sortedWords.add(word.toLowerCase().replace(",", ""));
-        }
-        
-        for (String word : sortedWords){
-            
-        }
-        
-        for (String word : words) {
-            String w = word.toLowerCase().replace(",", "");
-            if (freqWords.containsKey(w)) {
-                Integer i = freqWords.get(w);
-                i++;
-                freqWords.put(w, i);
-            } else {
-                freqWords.put(w, 1);
+        Map <String, TreeSet<Integer>> countedMap = new TreeMap();
+        int lineNr = 1;
+        String[] words = (taInput.getText().replace("\n", " !! ")).split(" ");
+        for (String w : words){
+            String word = w.toLowerCase().replace(",", "");
+            if (word.equals("!!")){
+                lineNr++;
             }
+            else{
+                if (countedMap.containsKey(word)){
+                    TreeSet<Integer> lineSet = countedMap.get(word);
+                    lineSet.add(lineNr);
+                }
+                else{
+                    TreeSet<Integer> lineSet = new TreeSet();
+                    lineSet.add(lineNr);
+                    countedMap.put(word, lineSet);
+                }
+            }
+        }
+        taOutput.setText("Regels:");
+        for (String w : countedMap.keySet()) {
+            taOutput.appendText("\n" + w + " : " + countedMap.get(w));
         }
     }
 
