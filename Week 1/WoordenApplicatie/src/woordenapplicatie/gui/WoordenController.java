@@ -102,6 +102,7 @@ public class WoordenController implements Initializable {
             }
         }
         taOutput.setText("Frequentie woorden:");
+/*
         List<Map.Entry<String, Integer>> list =
                 new LinkedList<Map.Entry<String, Integer>>(freqWords.entrySet());
 
@@ -120,45 +121,38 @@ public class WoordenController implements Initializable {
         taOutput.setText("Aantal keer:");
         for (String w : sortedMap.keySet()) {
             taOutput.appendText("\n" + w + ":" + sortedMap.get(w));
-        }
-       
+        }*/
 
-        /**TreeSet<Map.Entry<String, Integer>> freqWordsSet = new TreeSet<>(new Comparator<Map.Entry<String,Integer>>(){
-            @Override
-            public int compare(Map.Entry<String,Integer> o1, Map.Entry<String,Integer> o2) {
-                return ((Comparable) ((Map.Entry) (o1)).getValue())
-                        .compareTo(((Map.Entry) (o2)).getValue());            }
-        });
-        freqWordsSet.addAll(freqWords.entrySet());
-        System.out.println(freqWordsSet);
-*/
+        TreeMap<String, Integer> freqWordsTreeMap = new TreeMap<>(new valueTreeMapComparator(freqWords));
+        freqWordsTreeMap.putAll(freqWords);
+        for (Map.Entry<String, Integer> entry : freqWordsTreeMap.entrySet()) {
+            taOutput.appendText("\n" + entry.getKey() + "  " + entry.getValue() );
+        }
+
     }
 
     @FXML
     private void concordatieAction(ActionEvent event) {
-        Map <String, TreeSet<Integer>> countedMap = new TreeMap();
-        int lineNr = 1;
-        String[] words = (taInput.getText().replace("\n", " !! ")).split(" ");
-        for (String w : words){
-            String word = w.toLowerCase().replace(",", "");
-            if (word.equals("!!")){
-                lineNr++;
-            }
-            else{
-                if (countedMap.containsKey(word)){
-                    TreeSet<Integer> lineSet = countedMap.get(word);
-                    lineSet.add(lineNr);
-                }
-                else{
-                    TreeSet<Integer> lineSet = new TreeSet();
-                    lineSet.add(lineNr);
-                    countedMap.put(word, lineSet);
-                }
-            }
+        String[] words = (taInput.getText().replace("\n", " ")).split(" ");
+        Set<String> sortedWords = new TreeSet();
+        Map<String, Integer> freqWords = new TreeMap();
+        for (String word : words) {
+            sortedWords.add(word.toLowerCase().replace(",", ""));
         }
-        taOutput.setText("Regels:");
-        for (String w : countedMap.keySet()) {
-            taOutput.appendText("\n" + w + " : " + countedMap.get(w));
+        
+        for (String word : sortedWords){
+            
+        }
+        
+        for (String word : words) {
+            String w = word.toLowerCase().replace(",", "");
+            if (freqWords.containsKey(w)) {
+                Integer i = freqWords.get(w);
+                i++;
+                freqWords.put(w, i);
+            } else {
+                freqWords.put(w, 1);
+            }
         }
     }
 
