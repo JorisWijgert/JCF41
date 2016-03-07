@@ -24,22 +24,22 @@ public class WoordenController implements Initializable {
     private static final String DEFAULT_TEXT = "Een, twee, drie, vier\n"
             + "Hoedje van, hoedje van\n"
             + "Een, twee, drie, vier\n"
-            + "Hoedje van papier\n"
-            + "\n"
-            + "Heb je dan geen hoedje meer\n"
-            + "Maak er één van bordpapier\n"
-            + "Eén, twee, drie, vier\n"
-            + "Hoedje van papier\n"
-            + "\n"
-            + "Een, twee, drie, vier\n"
-            + "Hoedje van, hoedje van\n"
-            + "Een, twee, drie, vier\n"
-            + "Hoedje van papier\n"
-            + "\n"
-            + "En als het hoedje dan niet past\n"
-            + "Zetten we 't in de glazenkas\n"
-            + "Een, twee, drie, vier\n"
-            + "Hoedje van papier";
+            + "Hoedje van papier\n";
+//            + "\n"
+//            + "Heb je dan geen hoedje meer\n"
+//            + "Maak er één van bordpapier\n"
+//            + "Eén, twee, drie, vier\n"
+//            + "Hoedje van papier\n"
+//            + "\n"
+//            + "Een, twee, drie, vier\n"
+//            + "Hoedje van, hoedje van\n"
+//            + "Een, twee, drie, vier\n"
+//            + "Hoedje van papier\n"
+//            + "\n"
+//            + "En als het hoedje dan niet past\n"
+//            + "Zetten we 't in de glazenkas\n"
+//            + "Een, twee, drie, vier\n"
+//            + "Hoedje van papier";
 
     @FXML
     private Button btAantal;
@@ -101,27 +101,6 @@ public class WoordenController implements Initializable {
             }
         }
         taOutput.setText("Frequentie woorden:");
-        /*
-        List<Map.Entry<String, Integer>> list =
-                new LinkedList<Map.Entry<String, Integer>>(freqWords.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            public int compare(Map.Entry<String, Integer> o1,
-                               Map.Entry<String, Integer> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
-            }
-        });
-
-        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-        for (Iterator<Map.Entry<String, Integer>> it = list.iterator(); it.hasNext();) {
-            Map.Entry<String, Integer> entry = it.next();
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        taOutput.setText("Aantal keer:");
-        for (String w : sortedMap.keySet()) {
-            taOutput.appendText("\n" + w + ":" + sortedMap.get(w));
-        }*/
-
         TreeMap<String, Integer> freqWordsTreeMap = new TreeMap<>(new valueTreeMapComparator(freqWords));
         freqWordsTreeMap.putAll(freqWords);
         for (Map.Entry<String, Integer> entry : freqWordsTreeMap.entrySet()) {
