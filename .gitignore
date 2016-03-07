@@ -62,3 +62,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /New Folder/Huffman/nbproject/private/
+/Week 3/Huffman/build/
+/Week 3/Huffman/dist/
