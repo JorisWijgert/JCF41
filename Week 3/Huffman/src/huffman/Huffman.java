@@ -21,32 +21,20 @@ public class Huffman {
      */
     private static ArrayList<Character> sentence = new ArrayList();
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
-    private static PriorityQueue<HuffItem> sortedItems;
 
     public static void main(String[] args) {
-
-        sortedItems = new PriorityQueue<HuffItem>(10, new Comparator<HuffItem>() {
-            public int compare(HuffItem a, HuffItem b) {
-                int sort1 = Integer.valueOf(a.getFreq()).compareTo(Integer.valueOf(b.getFreq()));
-                //System.out.println("a" + Integer.valueOf(a.getFreq()));
-                //System.out.println("b" + Integer.valueOf(b.getFreq()));
-                if (sort1 != 0) {
-                    return sort1;
-                } else {
-                    return a.getCharac().toString().toLowerCase().compareTo(b.getCharac().toString().toLowerCase());
-                }
-            }
-        });
-
-        String words = "lorem ipsum";
-        for (Character c : words.toCharArray()) {
+        String words = "lorem ipsum bla di bla qun joris";
+        for (Character c
+                : words.toCharArray()) {
             sentence.add(c);
         }
+
         stepOneFreq();
         // TODO code application logic here
     }
 
     public static void stepOneFreq() {
+        // Count char and set them in list
         for (Character c : sentence) {
             boolean charFound = false;
             for (HuffItem h : itemsWithFreq) {
@@ -61,12 +49,14 @@ public class Huffman {
                 itemsWithFreq.add(new HuffItem(c, 1));
             }
         }
+        itemsWithFreq.sort(new Comparator<HuffItem>() {
+            public int compare(HuffItem a, HuffItem b) {
+                return Integer.valueOf(b.getFreq()).compareTo(Integer.valueOf(a.getFreq()));
+
+            }
+        });
         for (HuffItem h : itemsWithFreq) {
-           sortedItems.add(h);
-        }
-        for (HuffItem h : sortedItems) {
             System.out.println(h.getCharac() + ":" + h.getFreq());
         }
     }
-
 }

@@ -26,8 +26,8 @@ public class HuffItem {
     public int getFreq() {
         return freq;
     }
-    
-    public void addFreq(){
+
+    public void addFreq() {
         freq++;
     }
 
