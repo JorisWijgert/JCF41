@@ -13,10 +13,30 @@ public class HuffItem {
 
     private Character charac;
     private int freq;
+    private HuffItem left;
+    private HuffItem right;
 
-    public HuffItem(Character charac, int freq) {
+    public HuffItem(Character charac, int freq, HuffItem left, HuffItem right) {
         this.charac = charac;
         this.freq = freq;
+        this.left = left;
+        this.right = right;
+    }
+
+    public HuffItem getLeft() {
+        return left;
+    }
+
+    public void setLeft(HuffItem left) {
+        this.left = left;
+    }
+
+    public HuffItem getRight() {
+        return right;
+    }
+
+    public void setRight(HuffItem right) {
+        this.right = right;
     }
 
     public Character getCharac() {
