@@ -27,31 +27,18 @@ public class Huffman {
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
 
     public static void main(String[] args) {
+        //String words = "bananen";
         String words = "lorem ipsum bla di bla qun joris";
         //Stap 1
         Set<HuffItem> setHufItems = makeHashSetItems(words);
         //Stap 2
-        PriorityQueue<HuffItem> phItem = sortHufSet(setHufItems);
-//        for (Character c
-//                : words.toCharArray()) {
-//            sentence.add(c);
-//        }
-//
-//        stepOneFreq();
+        PriorityQueue<HuffItem> phItem = sortHuffSet(setHufItems);
+        //Stap 3
+        phItem = makeHuffTree(phItem);
+        //teken tree
+        HuffItem huffItem = phItem.peek();
+        drawHuffTree(huffItem);
         System.out.println("aantal karakters " + words.length());
-        // TODO code application logic here
-    }
-
-    private static PriorityQueue<HuffItem> sortHufSet(Set set) {
-        PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem::getFreq));
-        pq.addAll(set);
-        int count = 0;
-
-        while (count < pq.size()) {
-            HuffItem h = pq.poll();
-            System.out.println(h.getCharac() + ":" + h.getFreq());
-        }
-        return pq;
     }
 
     private static HashSet<HuffItem> makeHashSetItems(String words) {
@@ -66,39 +53,41 @@ public class Huffman {
             char key = entry.getKey();
             Integer value = entry.getValue();
             hSet.add(new HuffItem(key, value, null, null));
-            // do what you have to do here
-            // In your case, an other loop.
         }
-        //map.forEach((character, count) -> hSet.add(new HuffItem(character, count, null, null)));
         return hSet;
     }
 
-//    public static void stepOneFreq() {
-//        // Count char and set them in list
-//        for (Character c : sentence) {
-//            boolean charFound = false;
-//            for (HuffItem h : itemsWithFreq) {
-//                if (h.getCharac().equals(c)) {
-//                    h.addFreq();
-//                    charFound = true;
-//
-//                }
-//
-//            }
-//            if (charFound == false) {
-//                itemsWithFreq.add(new HuffItem(c, 1));
-//            }
-//        }
-//        itemsWithFreq.sort(new Comparator<HuffItem>() {
-//            public int compare(HuffItem a, HuffItem b) {
-//                return Integer.valueOf(b.getFreq()).compareTo(Integer.valueOf(a.getFreq()));
-//
-//            }
-//        });
-//        for (HuffItem h : itemsWithFreq) {
+    private static PriorityQueue<HuffItem> sortHuffSet(Set set) {
+        PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem::getFreq));
+        pq.addAll(set);
+        int count = 0;
+
+//        while (count < pq.size()) {
+//            HuffItem h = pq.poll();
 //            System.out.println(h.getCharac() + ":" + h.getFreq());
-//            
 //        }
-//        
-//    }
+        return pq;
+    }
+
+    private static PriorityQueue<HuffItem> makeHuffTree(PriorityQueue<HuffItem> insertPq) {
+        HuffItem a = insertPq.poll();
+        HuffItem b = insertPq.poll();
+        HuffItem c = new HuffItem(null, a.getFreq() + b.getFreq(), a, b);
+        insertPq.add(c);
+        if (insertPq.size() > 1) {
+            insertPq = makeHuffTree(insertPq);
+        }
+        return insertPq;
+    }
+
+    private static void drawHuffTree(HuffItem phItem) {
+        System.out.println(phItem.getCharac() + " : " + phItem.getFreq());
+        if (phItem.getLeft() != null) {
+            drawHuffTree(phItem.getLeft());
+        }
+        if (phItem.getRight() != null) {
+            drawHuffTree(phItem.getRight());
+        }
+    }
+
 }
