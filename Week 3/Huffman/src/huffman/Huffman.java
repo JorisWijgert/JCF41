@@ -31,7 +31,7 @@ public class Huffman {
         //Stap 1
         Set<HuffItem> setHufItems = makeHashSetItems(words);
         //Stap 2
-        PriorityQueue<HuffItem> phItem = sortHufSet(setHufItems); 
+        PriorityQueue<HuffItem> phItem = sortHufSet(setHufItems);
 //        for (Character c
 //                : words.toCharArray()) {
 //            sentence.add(c);
@@ -42,17 +42,18 @@ public class Huffman {
         // TODO code application logic here
     }
 
-    private static PriorityQueue<HuffItem> sortHufSet(Set set){
-       PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem :: getFreq));
-       pq.addAll(set);
-       int count = 0;           
-       
-       while(count < pq.size()){
-           HuffItem h = pq.poll();
+    private static PriorityQueue<HuffItem> sortHufSet(Set set) {
+        PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem::getFreq));
+        pq.addAll(set);
+        int count = 0;
+
+        while (count < pq.size()) {
+            HuffItem h = pq.poll();
             System.out.println(h.getCharac() + ":" + h.getFreq());
         }
-       return pq;
+        return pq;
     }
+
     private static HashSet<HuffItem> makeHashSetItems(String words) {
         Map<Character, Integer> map = new HashMap<>();
         for (int i = 0; i < words.length(); i++) {
