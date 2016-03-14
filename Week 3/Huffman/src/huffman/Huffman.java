@@ -25,10 +25,11 @@ public class Huffman {
      */
     private static ArrayList<Character> sentence = new ArrayList();
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
+    public static HashMap<Character, String> trialMap = new HashMap<>();
 
     public static void main(String[] args) {
-        //String words = "bananen";
-        String words = "lorem ipsum bla di bla qun joris";
+        String words = "bananen";
+        //String words = "lorem ipsum bla di bla qun joris";
         //Stap 1
         Set<HuffItem> setHufItems = makeHashSetItems(words);
         //Stap 2
@@ -38,6 +39,8 @@ public class Huffman {
         //teken tree
         HuffItem huffItem = phItem.peek();
         drawHuffTree(huffItem);
+        //Aflezen code 
+        Map<Character, String> mapje = makeMapCodes(huffItem, "");
         System.out.println("aantal karakters " + words.length());
     }
 
@@ -88,6 +91,22 @@ public class Huffman {
         if (phItem.getRight() != null) {
             drawHuffTree(phItem.getRight());
         }
+    }
+
+    private static HashMap<Character, String> makeMapCodes(HuffItem huffItem, String code) {
+        if (huffItem.getCharac() != null) {
+            trialMap.put(huffItem.getCharac(), code);
+        }
+
+        if (huffItem.getLeft() != null) {
+            code += "0";
+            makeMapCodes(huffItem.getLeft(), code);
+        }
+        if (huffItem.getRight() != null) {
+            code += "1";
+            makeMapCodes(huffItem.getRight(), code);
+        }
+        return trialMap;
     }
 
 }
