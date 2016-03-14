@@ -45,7 +45,10 @@ public class Huffman {
     private static PriorityQueue<HuffItem> sortHufSet(Set set){
        PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem :: getFreq));
        pq.addAll(set);
-       for (HuffItem h : pq) {
+       int count = 0;           
+       
+       while(count < pq.size()){
+           HuffItem h = pq.poll();
             System.out.println(h.getCharac() + ":" + h.getFreq());
         }
        return pq;
