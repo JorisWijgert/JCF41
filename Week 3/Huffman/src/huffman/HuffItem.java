@@ -15,12 +15,14 @@ public class HuffItem {
     private int freq;
     private HuffItem left;
     private HuffItem right;
+    private String code;
 
-    public HuffItem(Character charac, int freq, HuffItem left, HuffItem right) {
+    public HuffItem(Character charac, int freq, HuffItem left, HuffItem right, String code) {
         this.charac = charac;
         this.freq = freq;
         this.left = left;
         this.right = right;
+        this.code = code;
     }
 
     public HuffItem getLeft() {
@@ -51,4 +53,11 @@ public class HuffItem {
         freq++;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

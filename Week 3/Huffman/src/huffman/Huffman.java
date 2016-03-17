@@ -26,21 +26,24 @@ public class Huffman {
     private static ArrayList<Character> sentence = new ArrayList();
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
     public static HashMap<Character, String> trialMap = new HashMap<>();
+    private static HuffItem trees;
+    private static Map<Character, String> mapje;
 
     public static void main(String[] args) {
-        String words = "bananen";
+        //String words = "bananen";
         //String words = "lorem ipsum bla di bla qun joris";
+        String words = "abcdefghijdasklvmfldhbdwasndwwohiewldffughpjooaaqaekrstuvwxyz";
         //Stap 1
         Set<HuffItem> setHufItems = makeHashSetItems(words);
         //Stap 2
         PriorityQueue<HuffItem> phItem = sortHuffSet(setHufItems);
         //Stap 3
-        phItem = makeHuffTree(phItem);
-        //teken tree
-        HuffItem huffItem = phItem.peek();
-        drawHuffTree(huffItem);
+        trees = makeHuffTree(phItem);
+        drawHuffTree(trees);
         //Aflezen code 
-        Map<Character, String> mapje = makeMapCodes(huffItem, "");
+        mapje = new HashMap();
+        makeMapCodes(trees, "");
+        System.out.println(mapje);
         System.out.println("aantal karakters " + words.length());
     }
 
@@ -55,7 +58,7 @@ public class Huffman {
         for (Entry<Character, Integer> entry : map.entrySet()) {
             char key = entry.getKey();
             Integer value = entry.getValue();
-            hSet.add(new HuffItem(key, value, null, null));
+            hSet.add(new HuffItem(key, value, null, null, ""));
         }
         return hSet;
     }
@@ -72,15 +75,15 @@ public class Huffman {
         return pq;
     }
 
-    private static PriorityQueue<HuffItem> makeHuffTree(PriorityQueue<HuffItem> insertPq) {
-        HuffItem a = insertPq.poll();
-        HuffItem b = insertPq.poll();
-        HuffItem c = new HuffItem(null, a.getFreq() + b.getFreq(), a, b);
-        insertPq.add(c);
-        if (insertPq.size() > 1) {
-            insertPq = makeHuffTree(insertPq);
+    private static HuffItem makeHuffTree(PriorityQueue<HuffItem> insertPq) {
+        while (insertPq.size() > 1) {
+            HuffItem a = insertPq.poll();
+            HuffItem b = insertPq.poll();
+            int itemSum = a.getFreq() + b.getFreq();
+            HuffItem c = new HuffItem(null, itemSum, a, b, "");
+            insertPq.add(c);
         }
-        return insertPq;
+        return insertPq.poll();
     }
 
     private static void drawHuffTree(HuffItem phItem) {
@@ -93,20 +96,32 @@ public class Huffman {
         }
     }
 
-    private static HashMap<Character, String> makeMapCodes(HuffItem huffItem, String code) {
-        if (huffItem.getCharac() != null) {
-            trialMap.put(huffItem.getCharac(), code);
+    // n : 0
+    private static void makeMapCodes(HuffItem huffItem, String code) {
+//        //String huffcode = "";
+//        System.out.println("c" + code);
+//        //System.out.println("h" + huffcode);
+//        
+//        if (huffItem.getCharac() != null) {            
+//            trialMap.put(huffItem.getCharac(), code);
+//        }
+//
+//        if (huffItem.getLeft() != null) {
+//            code += "0";
+//            makeMapCodes(huffItem.getLeft(), code);
+//        }
+//        if (huffItem.getRight() != null) {
+//            code += "1";
+//            makeMapCodes(huffItem.getRight(), code);
+//        }
+//        return trialMap;
+        if (huffItem != null) {
+            makeMapCodes(huffItem.getLeft(), code + '0');
+            makeMapCodes(huffItem.getRight(), code + '1');
+            if (huffItem.getRight() == null && huffItem.getLeft() == null){
+                mapje.put(huffItem.getCharac(), code);
+            }
         }
-
-        if (huffItem.getLeft() != null) {
-            code += "0";
-            makeMapCodes(huffItem.getLeft(), code);
-        }
-        if (huffItem.getRight() != null) {
-            code += "1";
-            makeMapCodes(huffItem.getRight(), code);
-        }
-        return trialMap;
     }
 
 }
