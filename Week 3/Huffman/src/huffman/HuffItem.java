@@ -5,11 +5,13 @@
  */
 package huffman;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jvdwi
  */
-public class HuffItem {
+public class HuffItem implements Serializable {
 
     private Character charac;
     private int freq;

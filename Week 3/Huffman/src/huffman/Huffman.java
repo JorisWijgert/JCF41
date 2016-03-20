@@ -5,14 +5,27 @@
  */
 package huffman;
 
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,12 +40,15 @@ public class Huffman {
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
     public static HashMap<Character, String> trialMap = new HashMap<>();
     private static HuffItem trees;
-    private static Map<Character, String> mapje;
+    private static HashMap<Character, String> makeMapCodesMap = new HashMap();
 
     public static void main(String[] args) {
-        //String words = "bananen";
+        String words = "bananen";
         //String words = "lorem ipsum bla di bla qun joris";
-        String words = "abcdefghijdasklvmfldhbdwasndwwohiewldffughpjooaaqaekrstuvwxyz";
+        //String words = "abcdefghijdasklvmfldhbdwasndwwohiewldffughpjooaaqaekrstuvwxyz";
+        //String words = "aaaaaabiiii                   iii";
+        //String words = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
         //Stap 1
         Set<HuffItem> setHufItems = makeHashSetItems(words);
         //Stap 2
@@ -40,11 +56,20 @@ public class Huffman {
         //Stap 3
         trees = makeHuffTree(phItem);
         drawHuffTree(trees);
-        //Aflezen code 
-        mapje = new HashMap();
+        //Aflezen code
+        //Stap 4
         makeMapCodes(trees, "");
-        System.out.println(mapje);
+        System.out.println(makeMapCodesMap);
         System.out.println("aantal karakters " + words.length());
+        //Stap 5
+        ArrayList<Boolean> bools = makeBooleanCode(words, makeMapCodesMap);
+        makeBinaryFile(bools, trees, words);
+        //Stap 6
+        try {
+            readFile();
+        } catch (IOException ex) {
+            Logger.getLogger(Huffman.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static HashSet<HuffItem> makeHashSetItems(String words) {
@@ -96,32 +121,125 @@ public class Huffman {
         }
     }
 
-    // n : 0
     private static void makeMapCodes(HuffItem huffItem, String code) {
-//        //String huffcode = "";
-//        System.out.println("c" + code);
-//        //System.out.println("h" + huffcode);
-//        
-//        if (huffItem.getCharac() != null) {            
-//            trialMap.put(huffItem.getCharac(), code);
-//        }
-//
-//        if (huffItem.getLeft() != null) {
-//            code += "0";
-//            makeMapCodes(huffItem.getLeft(), code);
-//        }
-//        if (huffItem.getRight() != null) {
-//            code += "1";
-//            makeMapCodes(huffItem.getRight(), code);
-//        }
-//        return trialMap;
+
         if (huffItem != null) {
             makeMapCodes(huffItem.getLeft(), code + '0');
             makeMapCodes(huffItem.getRight(), code + '1');
-            if (huffItem.getRight() == null && huffItem.getLeft() == null){
-                mapje.put(huffItem.getCharac(), code);
+            if (huffItem.getRight() == null && huffItem.getLeft() == null) {
+                makeMapCodesMap.put(huffItem.getCharac(), code);
+            }
+        }
+
+    }
+
+    private static ArrayList<Boolean> makeBooleanCode(String words, HashMap<Character, String> hm) {
+        String returnString = "";
+        ArrayList<Boolean> chars = new ArrayList();
+        int count = 0;
+        for (char c : words.toCharArray()) {
+            returnString += hm.get(c);
+        }
+        for (char c : returnString.toCharArray()) {
+            if (c == '0') {
+                chars.add(false);
+            } else if (c == '1') {
+                chars.add(true);
+            }
+        }
+        return chars;
+    }
+
+    private static void makeBinaryFile(ArrayList<Boolean> compressedValues, HuffItem tree, String words) {
+        FileOutputStream fosC = null;
+        FileWriter fw = null;
+
+        try {
+            File compressed = new File("D:\\compressed.bin");
+            File notCompressed = new File("D:\\notCompressed.txt");
+            fosC = new FileOutputStream(compressed);
+            ObjectOutputStream oosC = new ObjectOutputStream(fosC);
+            oosC.writeObject(tree);
+            for (boolean bool : compressedValues) {
+                oosC.writeObject(bool);
+            }
+            fw = new FileWriter(notCompressed);
+            fw.write(words);
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Huffman.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Huffman.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fosC.close();
+                fw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Huffman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
+    private static void readFile() throws IOException {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        File compressed = new File("D:\\compressed.bin");
+        HuffItem tree = null;
+        BitSet bits = null;
+        ArrayList<Boolean> boolValues = null;
+        try {
+            fis = new FileInputStream(compressed);
+            ois = new ObjectInputStream(fis);
+            tree = (HuffItem) ois.readObject();
+            boolValues = new ArrayList();
+            Object b = null;
+            while ((b = ois.readObject()) != null) {
+                boolValues.add((Boolean) b);
+            }
+
+        } catch (EOFException e) {
+            System.out.println("Done reading");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Huffman.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            fis.close();
+            ois.close();
+        }
+        readCodes(tree, boolValues, "");
+    }
+
+    private static void readCodes(HuffItem tree, ArrayList<Boolean> bools, String words) {
+        /*HuffItem newBranch = null;
+        ArrayList<Boolean> recursiveList = new ArrayList<>(bools);
+        for (Boolean b : bools) {
+
+            if (b == true) {
+                newBranch = tree.getRight();
+            } else if (b == false) {
+                newBranch = tree.getLeft();
+            }
+            recursiveList.remove(b);
+
+            if (newBranch.getLeft() == null && newBranch.getRight() == null) {
+
+                words += newBranch.getCharac();
+                newBranch = null;
+            } else {
+                readCodes(newBranch, recursiveList, words);
+            }
+        }
+        System.out.println(words);
+        
+        */
+        StringBuilder sb = new StringBuilder();
+        HuffItem c = tree;
+        for (int i = 0; i < bools.size(); i++) {
+            c = bools.get(i) == true ? c.getRight() : c.getLeft();
+            if (c.getLeft() == null && c.getRight() == null) {
+                sb.append(c.getCharac());
+                c = tree;
+            }
+        }
+        System.out.println("Result: " + sb);
+    }
 }
