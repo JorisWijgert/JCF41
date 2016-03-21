@@ -43,8 +43,8 @@ public class Huffman {
     private static HashMap<Character, String> makeMapCodesMap = new HashMap();
 
     public static void main(String[] args) {
-        String words = "bananen";
-        //String words = "lorem ipsum bla di bla qun joris";
+        //String words = "bananen";
+        String words = "lorem ipsum bla di bla qun joris";
         //String words = "abcdefghijdasklvmfldhbdwasndwwohiewldffughpjooaaqaekrstuvwxyz";
         //String words = "aaaaaabiiii                   iii";
         //String words = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
