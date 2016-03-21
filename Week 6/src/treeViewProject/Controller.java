@@ -1,4 +1,4 @@
-package sample;
+package treeViewProject;
 
 public class Controller {
 }
