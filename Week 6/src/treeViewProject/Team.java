@@ -1,38 +1,31 @@
 package treeViewProject;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jvdwi on 21-3-2016.
  */
-public class Team {
-    private String name;
-    private List<Player> players;
+public class Team extends CommonObject<Player> {
 
-    public Team(String name, List<Player> players) {
-        this.name = name;
-        this.players = new ArrayList();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    public Team(String name, ObservableList<Player> players) {
+        super(name, players);
     }
 
     @Override
-    public String toString() {
-        return name;
+    public List<Player> getChildren(){
+        return super.getChildren();
+    }
+
+    @Override
+    public void addObject(Player object) {
+        super.getChildren().add(object);
+    }
+
+    @Override
+    public void editObject(Player object) {
+
     }
 }
