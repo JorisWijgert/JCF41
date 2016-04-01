@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -7,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
 <GridPane alignment="center" hgap="10" prefHeight="672.0" prefWidth="954.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="treeViewProject.Controller">
    <columnConstraints>
@@ -21,20 +23,48 @@
       <Pane prefHeight="680.0" prefWidth="954.0">
          <children>
             <TreeView fx:id="trvDivisions" layoutX="14.0" layoutY="14.0" prefHeight="308.0" prefWidth="200.0" />
-            <TableView layoutX="228.0" layoutY="14.0" prefHeight="299.0" prefWidth="287.0">
+            <TableView fx:id="tvPlayers" layoutX="228.0" layoutY="14.0" prefHeight="299.0" prefWidth="696.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                 <TableColumn fx:id="tcName" prefWidth="200.0" text="Naam">
+                    <cellValueFactory>
+                       <PropertyValueFactory property="name" />
+                    </cellValueFactory>
+                 </TableColumn>
+                 <TableColumn fx:id="tcSort" prefWidth="48.0" text="Age">
+                    <cellValueFactory>
+                       <PropertyValueFactory property="age" />
+                    </cellValueFactory>
+                 </TableColumn>
+                 <TableColumn fx:id="tcLocation" prefWidth="280.0" text="Position">
+                    <cellValueFactory>
+                       <PropertyValueFactory property="position" />
+                    </cellValueFactory>
+                 </TableColumn>
+                 <TableColumn fx:id="tcOnLoc" prefWidth="162.0" text="Nation">
+                    <cellValueFactory>
+                       <PropertyValueFactory property="nation" />
+                    </cellValueFactory>
+                 </TableColumn>
               </columns>
             </TableView>
             <Label layoutX="23.0" layoutY="334.0" text="Teams" />
             <Button layoutX="23.0" layoutY="418.0" mnemonicParsing="false" onAction="#addTeam" text="Add Team" />
             <TextField fx:id="tfTeamAdd" layoutX="23.0" layoutY="368.0" />
-            <TextField fx:id="tfPlayerAdd" layoutX="23.0" layoutY="492.0" />
+            <TextField fx:id="tfPlayerAdd" layoutX="23.0" layoutY="492.0" promptText="Name" />
             <Label layoutX="26.0" layoutY="456.0" text="Player" />
-            <Button layoutX="28.0" layoutY="537.0" mnemonicParsing="false" onAction="#addPlayer" text="Add Player" />
+            <Button layoutX="21.0" layoutY="613.0" mnemonicParsing="false" onAction="#addPlayer" text="Add Player" />
             <ComboBox fx:id="cbDivisions" layoutX="191.0" layoutY="368.0" prefWidth="150.0" promptText="Select Division" />
             <ComboBox fx:id="cbTeams" layoutX="191.0" layoutY="492.0" prefWidth="150.0" promptText="Select Team" />
+            <TextField fx:id="tfPlayerAge" layoutX="23.0" layoutY="517.0" promptText="Age" />
+            <TextField fx:id="tfPlayerPosition" layoutX="23.0" layoutY="542.0" promptText="Position" />
+            <TextField fx:id="tfPlayerNation" layoutX="23.0" layoutY="567.0" promptText="Nation" />
+            <Button layoutX="757.0" layoutY="536.0" mnemonicParsing="false" onAction="#editTableView" text="Edit tableView" />
+            <TextField fx:id="tfNaamEdit" layoutX="429.0" layoutY="473.0" prefHeight="25.0" prefWidth="91.0" promptText="Naam" />
+            <TextField fx:id="tfAgeEdit" layoutX="543.0" layoutY="473.0" prefHeight="25.0" prefWidth="91.0" promptText="Age" />
+            <TextField fx:id="tfPositionEdit" layoutX="652.0" layoutY="473.0" prefHeight="25.0" prefWidth="91.0" promptText="Position" />
+            <TextField fx:id="tfNationEdit" layoutX="767.0" layoutY="473.0" prefHeight="25.0" prefWidth="91.0" promptText="Nation" />
+            <TextField fx:id="tfTeamEdit" layoutX="429.0" layoutY="356.0" />
+            <Button layoutX="429.0" layoutY="406.0" mnemonicParsing="false" onAction="#editTeam" text="Edit Team" />
          </children>
       </Pane>
    </children>
