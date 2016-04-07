@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,17 +149,7 @@ public class Controller implements Initializable {
     }
 
     private void renewTreeView(List<Division> divisions) {
-//        tvPlayers.setItems(null);
-
         TreeItem<Object> divisionTree = new TreeItem(rt);
-//        for (Division division : divisions) {
-//            TreeItem<Object> divisionTreeItem = new TreeItem(division);
-//            for (Team team : division.getChildren()) {
-//                TreeItem<Object> teamTreeItem = new TreeItem(team);
-//                divisionTreeItem.getChildren().add(teamTreeItem);
-//            }
-//            divisionTree.getChildren().add(divisionTreeItem);
-//        }
         trvDivisions.setRoot(divisionTree);
     }
 
