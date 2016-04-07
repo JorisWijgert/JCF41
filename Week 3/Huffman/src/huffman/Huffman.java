@@ -38,7 +38,7 @@ public class Huffman {
      */
     private static ArrayList<Character> sentence = new ArrayList();
     private static ArrayList<HuffItem> itemsWithFreq = new ArrayList();
-    public static HashMap<Character, String> trialMap = new HashMap<>();
+    private static HashMap<Character, String> trialMap = new HashMap<>();
     private static HuffItem trees;
     private static HashMap<Character, String> makeMapCodesMap = new HashMap();
 
@@ -91,12 +91,6 @@ public class Huffman {
     private static PriorityQueue<HuffItem> sortHuffSet(Set set) {
         PriorityQueue<HuffItem> pq = new PriorityQueue(set.size(), Comparator.comparing(HuffItem::getFreq));
         pq.addAll(set);
-        int count = 0;
-
-//        while (count < pq.size()) {
-//            HuffItem h = pq.poll();
-//            System.out.println(h.getCharac() + ":" + h.getFreq());
-//        }
         return pq;
     }
 
@@ -130,7 +124,6 @@ public class Huffman {
                 makeMapCodesMap.put(huffItem.getCharac(), code);
             }
         }
-
     }
 
     private static ArrayList<Boolean> makeBooleanCode(String words, HashMap<Character, String> hm) {
@@ -146,6 +139,7 @@ public class Huffman {
             } else if (c == '1') {
                 chars.add(true);
             }
+            //chars.add( c== '1')
         }
         return chars;
     }
@@ -209,28 +203,6 @@ public class Huffman {
     }
 
     private static void readCodes(HuffItem tree, ArrayList<Boolean> bools, String words) {
-        /*HuffItem newBranch = null;
-        ArrayList<Boolean> recursiveList = new ArrayList<>(bools);
-        for (Boolean b : bools) {
-
-            if (b == true) {
-                newBranch = tree.getRight();
-            } else if (b == false) {
-                newBranch = tree.getLeft();
-            }
-            recursiveList.remove(b);
-
-            if (newBranch.getLeft() == null && newBranch.getRight() == null) {
-
-                words += newBranch.getCharac();
-                newBranch = null;
-            } else {
-                readCodes(newBranch, recursiveList, words);
-            }
-        }
-        System.out.println(words);
-        
-        */
         StringBuilder sb = new StringBuilder();
         HuffItem c = tree;
         for (int i = 0; i < bools.size(); i++) {

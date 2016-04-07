@@ -49,11 +49,12 @@ public class Controller implements Initializable {
     @FXML
     TableView<Player> tvPlayers;
 
-    public ObservableList<Team> teamObservableList;
-    public ObservableList<Division> divisionObservableList;
-    public ObservableList<Player> playerObservableList;
-    public Player oldPlayer;
-    public Team oldTeam;
+    private ObservableList<Team> teamObservableList;
+    private ObservableList<Division> divisionObservableList;
+    private ObservableList<Player> playerObservableList;
+    private Player oldPlayer;
+    private Team oldTeam;
+    private RootItem rt;
 
 
     @Override
@@ -75,19 +76,33 @@ public class Controller implements Initializable {
         divisions.add(new Division("Eredivisie", teamObservableList));
         divisions.add(new Division("Eerste divisie", FXCollections.observableArrayList(new ArrayList<Team>())));
         divisionObservableList = FXCollections.observableList(divisions);
-        trvDivisions.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Object>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<Object>> observable, TreeItem<Object> oldValue, TreeItem<Object> newValue) {
-                Platform.runLater(() -> {
-                    if (newValue != null && newValue.getValue() instanceof Team) {
-                        oldTeam = (Team) newValue.getValue();
-                        tfTeamEdit.setText(oldTeam.getName());
-                        tvPlayers.setItems((ObservableList<Player>) oldTeam.getChildren());
-                    } else {
-                        tfTeamEdit.clear();
+
+        rt = new RootItem("Divisies", divisionObservableList);
+
+        trvDivisions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> {
+                if (newValue != null && newValue.getValue() instanceof Team) {
+                    oldTeam = (Team) newValue.getValue();
+                    tfTeamEdit.setText(oldTeam.getName());
+                    tvPlayers.setItems((ObservableList<Player>) oldTeam.getChildren());
+                } else {
+                    tfTeamEdit.clear();
+                }
+            });
+        });
+
+        trvDivisions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        {
+            Platform.runLater(() -> {
+                newValue.getChildren().clear();
+                if (newValue.getValue() instanceof CommonObject){
+                    CommonObject co = (CommonObject) newValue.getValue();
+                    for(Object c : co.getChildren()) {
+                        TreeItem<Object> objectTreeItem = new TreeItem(c);
+                        newValue.getChildren().add(objectTreeItem);
                     }
-                });
-            }
+                }
+            });
         });
 
         tvPlayers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Player>() {
@@ -96,7 +111,7 @@ public class Controller implements Initializable {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        if(tvPlayers.getSelectionModel().getSelectedItem() !=null) {
+                        if (tvPlayers.getSelectionModel().getSelectedItem() != null) {
                             oldPlayer = tvPlayers.getSelectionModel().getSelectedItem();
                             tfNaamEdit.setText(oldPlayer.getName());
                             tfAgeEdit.setText(String.valueOf(oldPlayer.getAge()));
@@ -112,9 +127,9 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void editTableView(){
-        for(Player player : playerObservableList){
-            if(player.equals(oldPlayer)){
+    private void editTableView() {
+        for (Player player : playerObservableList) {
+            if (player.equals(oldPlayer)) {
                 player.setName(tfNaamEdit.getText());
                 player.setAge(Integer.parseInt(tfAgeEdit.getText()));
                 player.setPosition(tfPositionEdit.getText());
@@ -125,9 +140,9 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void editTeam(){
-        for (Team team : teamObservableList){
-            if(team.equals(oldTeam)){
+    private void editTeam() {
+        for (Team team : teamObservableList) {
+            if (team.equals(oldTeam)) {
                 team.setName(tfTeamEdit.getText());
             }
         }
@@ -135,16 +150,17 @@ public class Controller implements Initializable {
     }
 
     private void renewTreeView(List<Division> divisions) {
-        tvPlayers.setItems(null);
-        TreeItem<Object> divisionTree = new TreeItem("Divisies");
-        for (Division division : divisions) {
-            TreeItem<Object> divisionTreeItem = new TreeItem(division);
-            for (Team team : division.getChildren()) {
-                TreeItem<Object> teamTreeItem = new TreeItem(team);
-                divisionTreeItem.getChildren().add(teamTreeItem);
-            }
-            divisionTree.getChildren().add(divisionTreeItem);
-        }
+//        tvPlayers.setItems(null);
+
+        TreeItem<Object> divisionTree = new TreeItem(rt);
+//        for (Division division : divisions) {
+//            TreeItem<Object> divisionTreeItem = new TreeItem(division);
+//            for (Team team : division.getChildren()) {
+//                TreeItem<Object> teamTreeItem = new TreeItem(team);
+//                divisionTreeItem.getChildren().add(teamTreeItem);
+//            }
+//            divisionTree.getChildren().add(divisionTreeItem);
+//        }
         trvDivisions.setRoot(divisionTree);
     }
 
